@@ -83,7 +83,7 @@ optimizer = optim.LBFGS([input_img])
 
 
 #参数可调  内容图和风格图占比
-style_weight = 1000000 # 风格权重（是大权重！！！！
+style_weight = 500000 # 风格权重（是大权重！！！！
 content_weight = 1     # 内容权重
 
 print('Starting optimization...')
