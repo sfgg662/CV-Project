@@ -5,7 +5,7 @@ import torch.nn.functional as F  #用于插值
 from PIL import Image
 from torchvision import transforms, models
 
-# lsf-test 3
+# lsf-test 4
 
 #设置设备
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
