@@ -1,0 +1,8 @@
+# 忽略 png 和 jpg
+*.png
+*.jpg
+*.jpeg
+
+*.pth
+
+__pycache__/

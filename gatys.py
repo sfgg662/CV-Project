@@ -4,8 +4,13 @@ import torch.optim as optim
 import torch.nn.functional as F  #用于插值
 from PIL import Image
 from torchvision import transforms, models
+import os
 
-# lsf-test 4
+# 路径处理，统一到当前工作目录
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+content_dir = os.path.join(curr_dir, "content.png")
+style_dir = os.path.join(curr_dir, "style.png")
+output_dir = os.path.join(curr_dir, "output.png")
 
 #设置设备
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -32,13 +37,13 @@ def image_loader(image_name, new_size=None):
     return image.to(device, torch.float)
 
 
-original_pil = Image.open("content.png")
+original_pil = Image.open(content_dir)
 orig_width, orig_height = original_pil.size
 print(f"Original Image Size: {orig_width} x {orig_height}")
 
 
-content_img = image_loader("content.png", new_size=imsize)
-style_img = image_loader("style.png", new_size=imsize)
+content_img = image_loader(content_dir, new_size=imsize)
+style_img = image_loader(style_dir, new_size=imsize)
 
 print(f"Processing Image Size: {content_img.shape}") 
 
@@ -133,5 +138,5 @@ output_img = F.interpolate(input_img, size=(orig_height, orig_width), mode='bili
 
 #保存结果
 result = unloader(output_img.cpu().clone().squeeze(0))
-result.save('output.png')
+result.save(output_dir)
 print(f"Done! Saved output.png with size {result.size}")
