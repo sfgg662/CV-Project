@@ -48,8 +48,8 @@ style_img = image_loader(style_dir, new_size=imsize)
 print(f"Processing Image Size: {content_img.shape}") 
 
 #初始化生成的图片
-input_img = content_img.clone()
-input_img.requires_grad_(True) 
+syn_img = content_img.clone()
+syn_img.requires_grad_(True) 
 
 #gram矩阵计算
 def gram_matrix(input):
@@ -92,7 +92,7 @@ with torch.no_grad():
 style_grams = {layer: gram_matrix(target_style_features[layer]) for layer in target_style_features}
 
 #优化器  ！！特殊
-optimizer = optim.LBFGS([input_img])
+optimizer = optim.LBFGS([syn_img])
 
 # 权重
 style_weight = 1000000 
@@ -104,9 +104,9 @@ while run[0] <= 300:
     #闭包！！！
     def closure():
         optimizer.zero_grad()
-        input_img.data.clamp_(0, 1)
+        syn_img.data.clamp_(0, 1)
 
-        features = get_features(input_img, cnn)
+        features = get_features(syn_img, cnn)
         
         style_loss = 0
         content_loss = 0
@@ -131,10 +131,10 @@ while run[0] <= 300:
 
     optimizer.step(closure)
 
-input_img.data.clamp_(0, 1)
+syn_img.data.clamp_(0, 1)
 
 #恢复原图尺寸
-output_img = F.interpolate(input_img, size=(orig_height, orig_width), mode='bilinear', align_corners=False)
+output_img = F.interpolate(syn_img, size=(orig_height, orig_width), mode='bilinear', align_corners=False)
 
 #保存结果
 result = unloader(output_img.cpu().clone().squeeze(0))
