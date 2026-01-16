@@ -8,8 +8,8 @@ import os
 
 # 路径处理，统一到当前工作目录
 curr_dir = os.path.dirname(os.path.abspath(__file__))
-content_dir = os.path.join(curr_dir, "girl2.jpg")
-style_dir = os.path.join(curr_dir, "style12.jpg")
+content_dir = os.path.join(curr_dir, "content2.jpg")
+style_dir = os.path.join(curr_dir, "style.jpg")
 output_dir = os.path.join(curr_dir, "output_sobel.png")
 
 #设置设备
@@ -96,6 +96,23 @@ class SobelEdgeDetector(torch.nn.Module):
         
         return torch.cat(channels, dim=1)
 
+class MultiscaleEdgeDetector(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.sobel = SobelEdgeDetector()
+
+    def forward(self, img):
+        sobel_list = []
+
+        scale1 = self.sobel(img)
+
+        img = F.avg_pool2d(img, kernel_size = 2, stride = 2)
+        scale2 = self.sobel(img)
+
+        sobel_list.append(scale1)
+        sobel_list.append(scale2)
+        return sobel_list
+
 #加载 VGG19 模型
 cnn = models.vgg19(pretrained=True).features.to(device).eval()
 
@@ -133,15 +150,16 @@ style_grams = {layer: gram_matrix(target_style_features[layer]) for layer in tar
 optimizer = optim.LBFGS([syn_img])
 
 # 初始化
-sobel_calculator = SobelEdgeDetector().to(device)
+sobel_calculator = MultiscaleEdgeDetector().to(device)
 
 # 权重
 style_weight = 1000000
 content_weight = 1
 sobel_weight = 1000
+sobel_scale = [0.8, 0.2]
 
 with torch.no_grad():
-    content_sobel = sobel_calculator(content_img)
+    content_sobel_list = sobel_calculator(content_img)
 
 print('Starting optimization...')
 run = [0]
@@ -165,10 +183,12 @@ while run[0] <= 250:
             style_gram = style_grams[layer]
             style_loss += torch.mean((layer_gram - style_gram) ** 2)
 
-        syn_sobel = sobel_calculator(syn_img)
-        sobel_loss = sobel_weight * F.mse_loss(content_sobel, syn_sobel)  # 改用 smooth L1
+        syn_sobel_list = sobel_calculator(syn_img)
+        sobel_loss = 0
+        for i, (content_sobel, syn_sobel) in enumerate(zip(content_sobel_list, syn_sobel_list)):
+            sobel_loss += sobel_scale[i] * F.mse_loss(content_sobel, syn_sobel)
 
-        total_loss = content_weight * content_loss + style_weight * style_loss + sobel_loss
+        total_loss = content_weight * content_loss + style_weight * style_loss + sobel_loss * sobel_weight
         total_loss.backward()
         
         run[0] += 1
