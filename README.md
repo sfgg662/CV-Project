@@ -52,11 +52,11 @@ with torch.no_grad():
 # for ...
 	# 省略
 	syn_sobel_list = sobel_calculator(syn_img)
-        sobel_loss = 0
-        for i, (content_sobel, syn_sobel) in enumerate(zip(content_sobel_list, syn_sobel_list)):
-            sobel_loss += sobel_scale[i] * F.mse_loss(content_sobel, syn_sobel)
+    sobel_loss = 0
+    for i, (content_sobel, syn_sobel) in enumerate(zip(content_sobel_list, syn_sobel_list)):
+        sobel_loss += sobel_scale[i] * F.mse_loss(content_sobel, syn_sobel)
 
-        total_loss = content_weight * content_loss + style_weight * style_loss + sobel_loss * sobel_weight
+    total_loss = content_weight * content_loss + style_weight * style_loss + sobel_loss * sobel_weight
 	
 ```
 
