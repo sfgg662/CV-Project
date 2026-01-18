@@ -1,3 +1,5 @@
+# 当前代码框架支持的模型：style2-4,style2-5
+
 import os
 import random
 import zipfile
@@ -27,7 +29,7 @@ TV_WEIGHT = 1e-6  # Total Variation 平滑损失权重
 COLOR_WEIGHT = 1e-2  # 颜色守恒损失权重（匹配输出与内容的通道均值/方差）
 # 多尺度/分层风格超参数
 # VGG 提取的4层对应的权重（relu1_2, relu2_2, relu3_3, relu4_3）
-STYLE_LAYER_WEIGHTS = [0.5, 0.3, 0.1, 0.1]
+STYLE_LAYER_WEIGHTS = [0.4, 0.3, 0.2, 0.1]
 # 风格图使用的不同分辨率（像素大小），会计算每个尺度的 Gram 矩阵
 STYLE_SCALES = [IMAGE_SIZE, IMAGE_SIZE * 2]
 # 每个尺度的权重，长度需与 STYLE_SCALES 一致
@@ -140,6 +142,21 @@ class TransformerNet(nn.Module):
             nn.InstanceNorm2d(128),
             nn.ReLU(inplace=True),
 
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
+            ResidualBlock(128),
             ResidualBlock(128),
             ResidualBlock(128),
             ResidualBlock(128),

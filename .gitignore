@@ -1,4 +1,10 @@
 # 忽略 png 和 jpg
+*.png
+*.jpg
+*.jpeg
 
+*.pth
+*edge.py
+*lapstyle_max_multiscale.py
 
 __pycache__/

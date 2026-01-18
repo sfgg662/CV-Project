@@ -113,7 +113,7 @@ content_weight = 1
 lap_weight1 = 100
 lap_weight2 = 1000
 
-lap_calculator = LaplacianConv()
+lap_calculator = LaplacianConv().to(device)
 
 # 计算content_img的层级laplace
 p1 = 4
