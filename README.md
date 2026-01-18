@@ -8,6 +8,7 @@ Neural Style Transfer
 - 结果保存在**output.png**
 
 ### 关于 realtimeNST(Johnson)
+- 完整的训练模型和训练结果存放地址：**https://disk.pku.edu.cn/link/AA58143429655A4B92957880FFD24EB198** 文件夹名：realtimeNST
 - 测试时，**在realtimeNST目录下**，运行指令 **python realtimeNST.py test style2-5 face1**
 - 这里的**style2-5.pth**是当前训练出来的比较均衡的模型，指的是当前style2训练出的第五个模型，考虑到占空间较大其他模型并未上传
 - **face1**可以替换为face2、clock等，指的是保存在testcontents里的测试用内容图
