@@ -3,7 +3,6 @@
 *.jpg
 *.jpeg
 
-*.pth
 *edge.py
 *lapstyle_max_multiscale.py
 
