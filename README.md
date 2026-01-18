@@ -8,7 +8,7 @@ Neural Style Transfer
 - 结果保存在**output.png**
 
 ### 关于 realtimeNST(Johnson)
-- 测试时运行指令 **python realtimeNST.py test style2-5 face1**
+- 测试时，**在realtimeNST目录下**，运行指令 **python realtimeNST.py test style2-5 face1**
 - 这里的**style2-5.pth**是当前训练出来的比较均衡的模型，指的是当前style2训练出的第五个模型，考虑到占空间较大其他模型并未上传
 - **face1**可以替换为face2、clock等，指的是保存在testcontents里的测试用内容图
 - 如果有训练的需求，详情见**realtimeNST\train_and_test_guide.md**，但注意需要下载较大的COCO数据集
